@@ -25,6 +25,20 @@ def Gui():
 
 Gui()
 
+players = ["X","O"]
+
+player = random.choice(players)
+buttuns = [["0","0","0"],
+           ["0","0","0"],
+           ["0","0","0"]]
+
+
+txt_lable = Label(text=f"now is {player} turn", font=("consoles",40))
+txt_lable.pack(side=TOP)
+
+reset_buttun = Button(text="restart", font=("consoles",20), command=new_game)
+reset_buttun.pack(side=TOP)
+
 
 
 
