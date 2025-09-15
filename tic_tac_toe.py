@@ -35,7 +35,21 @@ def next_turn(row, col):
 
 
 def check_winer():
-    pass
+    if buttuns[row][0]["text"]==buttuns[row][1]["text"]==buttuns[row][2]["text"]!="":
+        return True
+    elif buttuns[0][col]["text"]==buttuns[1][col]["text"]==buttuns[2][col]["text"]!="":
+        return True
+    elif buttuns[0][0]["text"]==buttuns[1][1]["text"]==buttuns[2][2]["text"]!="":
+        return True
+    elif buttuns[0][2]["text"]==buttuns[1][1]["text"]==buttuns[2][0]["text"]!="":
+        return True
+    elif empty_spaces() is False:
+        return None
+    else:
+        return False
+
+
+        
 
 def empty_spaces():
     pass
