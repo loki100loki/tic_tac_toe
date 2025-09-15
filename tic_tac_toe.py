@@ -1,111 +1,108 @@
 from tkinter import *
 import random
 
+# --- Functions ---
 
 def next_turn(row, col):
     global player
-    if buttuns[row][col][Text] == "" and check_winer() is False:
-        if player == players[0]:
-            buttuns[row][col]["text"]= player
+    if buttons[row][col]['text'] == "" and check_winner() is False:
+        buttons[row][col]['text'] = player
 
+        winner = check_winner()
 
-            if check_winer() is False:
-                player = players[1]
-                txt_lable.config(text=(players[1] + " turn"))
-            elif check_winer() is True:
-                txt_lable.config(text=(players[0] + " win"))
-            elif empty_spaces() is False:
-                txt_lable.config(text="its a tie!")
+        if winner is False:
+            # Switch turn
+            player = players[1] if player == players[0] else players[0]
+            txt_label.config(text=f"{player} turn")
+        elif winner == "Tie":
+            txt_label.config(text="It's a tie!")
         else:
-            buttuns[row][col]["text"]= player
+            txt_label.config(text=f"{player} wins!")
 
+def check_winner():
+    # Check rows
+    for row in range(3):
+        if buttons[row][0]['text'] == buttons[row][1]['text'] == buttons[row][2]['text'] != "":
+            for col in range(3):
+                buttons[row][col].config(bg="green")
+            return True
 
-            if check_winer() is False:
-                player = players[0]
-                txt_lable.config(text=(players[0] + " turn"))
-            elif check_winer() is True:
-                txt_lable.config(text=(players[1] + " win"))
-            elif empty_spaces() is False:
-                txt_lable.config(text="its a tie!")
-       
-            
+    # Check columns
+    for col in range(3):
+        if buttons[0][col]['text'] == buttons[1][col]['text'] == buttons[2][col]['text'] != "":
+            for row in range(3):
+                buttons[row][col].config(bg="green")
+            return True
 
-
-    pass
-
-
-def check_winer():
-    if buttuns[row][0]["text"]==buttuns[row][1]["text"]==buttuns[row][2]["text"]!="":
+    # Check diagonals
+    if buttons[0][0]['text'] == buttons[1][1]['text'] == buttons[2][2]['text'] != "":
+        buttons[0][0].config(bg="green")
+        buttons[1][1].config(bg="green")
+        buttons[2][2].config(bg="green")
         return True
-    elif buttuns[0][col]["text"]==buttuns[1][col]["text"]==buttuns[2][col]["text"]!="":
-        return True
-    elif buttuns[0][0]["text"]==buttuns[1][1]["text"]==buttuns[2][2]["text"]!="":
-        return True
-    elif buttuns[0][2]["text"]==buttuns[1][1]["text"]==buttuns[2][0]["text"]!="":
-        return True
-    elif empty_spaces() is False:
-        return None
-    else:
-        return False
 
+    if buttons[0][2]['text'] == buttons[1][1]['text'] == buttons[2][0]['text'] != "":
+        buttons[0][2].config(bg="green")
+        buttons[1][1].config(bg="green")
+        buttons[2][0].config(bg="green")
+        return True
 
-        
+    if empty_spaces() is False:
+        # Tie
+        for row in range(3):
+            for col in range(3):
+                buttons[row][col].config(bg="yellow")
+        return "Tie"
+
+    return False
 
 def empty_spaces():
-    pass
+    for row in range(3):
+        for col in range(3):
+            if buttons[row][col]['text'] == "":
+                return True
+    return False
 
 def new_game():
-    pass
+    global player
+    player = random.choice(players)
+    txt_label.config(text=f"{player} turn")
+    for row in range(3):
+        for col in range(3):
+            buttons[row][col].config(text="", bg="#F0F0F0")
 
+# --- Main Window ---
+window = Tk()
+window.title("Tic Tac Toe")
 
-Window = Tk()
+# Set icon
+try:
+    icon_img = PhotoImage(file="tct.png")
+    window.iconphoto(True, icon_img)
+except:
+    pass  # If the icon file doesn't exist, continue
 
-#customize the window
-def Gui():
-  Iamage = PhotoImage(file="tct.png")
-  Window.iconphoto(True, Iamage)
-  Window.title("Tic Tac Toe")
-Gui()
-
-
-
-#randomly choose the first player
-players = ["X","O"]
+# --- Players ---
+players = ["X", "O"]
 player = random.choice(players)
 
-#list of buttons
-buttuns = [["0","0","0"],
-           ["0","0","0"],
-           ["0","0","0"]]
-
-#adding buttons to the window
-butframe = Frame(Window)
-butframe.pack(side=BOTTOM)
+# --- Buttons Grid ---
+buttons = [[0 for _ in range(3)] for _ in range(3)]
+frame = Frame(window)
+frame.pack(side=BOTTOM)
 
 for row in range(3):
     for col in range(3):
-        buttuns[row][col] = Button(butframe, text="", font=("consoles",40), width=5, height=3,
-                                  command=lambda row=row, col=col: next_turn(row,col))
-        buttuns[row][col].grid(row=row, column=col)
+        buttons[row][col] = Button(frame, text="", font=("consolas", 40), width=5, height=2,
+                                   command=lambda r=row, c=col: next_turn(r, c))
+        buttons[row][col].grid(row=row, column=col)
 
+# --- Turn Label ---
+txt_label = Label(window, text=f"{player} turn", font=("consolas", 40))
+txt_label.pack(side=TOP)
 
+# --- Restart Button ---
+reset_button = Button(window, text="Restart", font=("consolas", 20), command=new_game)
+reset_button.pack(side=TOP)
 
-
-#whos turn is know?
-txt_lable = Label(Window, text=f"{player} turn", font=("consoles",40))
-txt_lable.pack(side=TOP)
-
-
-#reset buttun 
-reset_buttun = Button(text="restart", font=("consoles",20), command=new_game)
-reset_buttun.pack(side=TOP)
-
-
-
-
-
-
-
-Window.mainloop()
-
-
+window.mainloop()
