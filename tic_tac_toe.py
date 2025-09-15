@@ -2,7 +2,35 @@ from tkinter import *
 import random
 
 
-def next_turn():
+def next_turn(row, col):
+    global player
+    if buttuns[row][col][Text] == "" and check_winer() is False:
+        if player == players[0]:
+            buttuns[row][col]["text"]= player
+
+
+            if check_winer() is False:
+                player = players[1]
+                txt_lable.config(text=(players[1] + " turn"))
+            elif check_winer() is True:
+                txt_lable.config(text=(players[0] + " win"))
+            elif empty_spaces() is False:
+                txt_lable.config(text="its a tie!")
+        else:
+            buttuns[row][col]["text"]= player
+
+
+            if check_winer() is False:
+                player = players[0]
+                txt_lable.config(text=(players[0] + " turn"))
+            elif check_winer() is True:
+                txt_lable.config(text=(players[1] + " win"))
+            elif empty_spaces() is False:
+                txt_lable.config(text="its a tie!")
+       
+            
+
+
     pass
 
 
@@ -23,9 +51,10 @@ def Gui():
   Iamage = PhotoImage(file="tct.png")
   Window.iconphoto(True, Iamage)
   Window.title("Tic Tac Toe")
-
-
 Gui()
+
+
+
 #randomly choose the first player
 players = ["X","O"]
 player = random.choice(players)
@@ -42,7 +71,7 @@ butframe.pack(side=BOTTOM)
 for row in range(3):
     for col in range(3):
         buttuns[row][col] = Button(butframe, text="", font=("consoles",40), width=5, height=3,
-                                  command=lambda r=row, c=col: next_turn(r, c))
+                                  command=lambda row=row, col=col: next_turn(row,col))
         buttuns[row][col].grid(row=row, column=col)
 
 
